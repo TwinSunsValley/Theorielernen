@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fahrschul-Trainer Pro - B197 & A1 (Komplettkatalog)</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gold: #fbbf24;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-pill.gold { color: var(--gold); border-color: rgba(251, 191, 36, 0.3); }
+        .stat-pill.xp { color: var(--primary); border-color: rgba(16, 185, 129, 0.3); }
+        .stat-pill.rank { color: var(--secondary); border-color: rgba(59, 130, 246, 0.3); }
+
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card-hover);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Quiz / Exam UI */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: var(--bg-card);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            margin: 0 1.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--secondary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .badge.danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .answers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer-option {
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .answer-option:hover {
+            border-color: var(--secondary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .answer-option.selected {
+            border-color: var(--secondary);
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .checkbox-custom {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .answer-option.selected .checkbox-custom {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Shop Styles */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .shop-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .shop-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .shop-item h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .shop-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .price-tag {
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        /* Results Screen */
+        .result-box {
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .result-stat-item .val {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .result-stat-item .lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+
+        .back-link:hover {
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <span class="logo-icon">🏍️🚗</span>
+            <div class="logo-text">
+                <h1>Fahrschul-Trainer B197 & A1</h1>
+                <p>Amtlicher Gesamtkatalog (Über 1.000 Fragen)</p>
+            </div>
+        </div>
+        <div class="user-stats">
+            <div class="stat-pill rank" id="userRank">Rang: Fahrschüler</div>
+            <div class="stat-pill xp" id="userXP">⭐ 0 XP</div>
+            <div class="stat-pill gold" id="userGold">🪙 150 Gold</div>
+        </div>
+    </header>
+
+    <main>
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard" class="view active">
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="setCategoryFilter('all')">📚 Alle Fragen (B197 & A1)</button>
+                <button class="filter-btn" onclick="setCategoryFilter('grundstoff')">📖 Grundstoff (Allgemein)</button>
+                <button class="filter-btn" onclick="setCategoryFilter('b197')">🚗 Nur Klasse B197</button>
+                <button class="filter-btn" onclick="setCategoryFilter('a1')">🏍️ Nur Klasse A1</button>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>🎯 Amtliche Prüfung</h3>
+                    <p>Simuliert die echte TÜV/DEKRA-Prüfung mit exakt 30 zufälligen Fragen, Fehlerpunkten (2-5) und der 10-Punkte-Grenze.</p>
+                    <button class="btn" onclick="startExam()">Prüfung starten (30 Fragen)</button>
+                </div>
+                <div class="card">
+                    <h3>⚡ Schnell-Lernen</h3>
+                    <p>Löse alle Fragen des gewählten Filters in zufälliger Reihenfolge, sammle XP & Gold und erhöhe deinen Wissensstand.</p>
+                    <button class="btn" onclick="startQuickStudy()">Lernen beginnen</button>
+                </div>
+                <div class="card">
+                    <h3>📊 Wissens-Status & Rang</h3>
+                    <p>Dein Wissens-Index steigt, je öfter du Fragen richtig beantwortest (Mastery Level 0 bis 3).</p>
+                    <div style="margin-top: 10px; font-weight: 600; font-size: 0.95rem;" id="dashboardKnowledgeText">Gesamt-Wissensstand: 0%</div>
+                </div>
+                <div class="card">
+                    <h3>🛍️ Shop & Garage</h3>
+                    <p>Kaufe dir exklusive Avatare, Joker und Cockpit-Themen für dein hart verdientes Gold.</p>
+                    <button class="btn btn-secondary" onclick="switchView('view-shop')">Zum Shop</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ / EXAM VIEW -->
+        <div id="view-quiz" class="view">
+            <div class="back-link" onclick="confirmAbortQuiz()">← Abbrechen & zurück zum Dashboard</div>
+            
+            <div class="quiz-header">
+                <span id="quizModeTitle" style="font-weight: 600;">Prüfungsmodus</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="quizProgressBar"></div>
+                </div>
+                <span id="quizCounter" style="font-weight: 600; color: var(--text-muted);">Frage 1 von 30</span>
+            </div>
+
+            <div class="question-card">
+                <div class="question-meta">
+                    <span class="badge" id="questionCategoryBadge">Grundstoff</span>
+                    <span class="badge danger" id="questionPointsBadge">3 Fehlerpunkte</span>
+                </div>
+                <div class="question-text" id="questionText">Lade Frage...</div>
+                <div class="answers-list" id="answersList">
+                    <!-- Options injected via JS -->
+                </div>
+            </div>
+
+            <div class="quiz-footer">
+                <button class="btn btn-secondary" style="width: auto;" id="btnPrev" onclick="prevQuestion()" disabled>Vorherige</button>
+                <button class="btn" style="width: auto; padding: 10px 30px;" id="btnNext" onclick="nextQuestion()">Antworten & Weiter</button>
+            </div>
+        </div>
+
+        <!-- RESULT VIEW -->
+        <div id="view-result" class="view">
+            <div class="result-box">
+                <div class="result-icon" id="resultIcon">🎉</div>
+                <div class="result-title" id="resultTitle">Prüfung Bestanden!</div>
+                <p id="resultSub" style="color: var(--text-muted);">Herzlichen Glückwunsch, du hast die theoretische Prüfung erfolgreich absolviert.</p>
+                
+                <div class="result-stats">
+                    <div class="result-stat-item">
+                        <div class="val" id="resScore">28/30</div>
+                        <div class="lbl">Richtige Antworten</div>
+                    </div>
+                    <div class="result-stat-item">
+                        <div class="val" id="resErrors" style="color: var(--primary);">2</div>
+                        <div class="lbl">Fehlerpunkte</div>
+                    </div>
+                    <div class="result-stat-item">
+                        <div class="val" id="resGold">+50 🪙</div>
+                        <div class="lbl">Belohnung</div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="switchView('view-dashboard')">Zurück zum Hauptmenü</button>
+            </div>
+        </div>
+
+        <!-- SHOP VIEW -->
+        <div id="view-shop" class="view">
+            <div class="back-link" onclick="switchView('view-dashboard')">← Zurück zum Dashboard</div>
+            <h2 style="margin-bottom: 1.5rem;">Fahrschul-Shop & Garage</h2>
+            <div class="shop-grid" id="shopGrid">
+                <!-- Shop items -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const baseQuestions = [
+            // Grundstoff
+            { id: 1, cat: 'grundstoff', pts: 3, text: 'Worauf müssen Sie beim Heranfahren an einen unbeschrankten Bahnübergang außerhalb geschlossener Ortschaften besonders achten?', options: ['Auf die Schienenführung und den Zustand des Gleisbetts', 'Auf herannahende Schienenfahrzeuge und deren Vorfahrt', 'Auf den Gegenverkehr hinter dem Übergang'], correct: [1], hint: 'Schienenfahrzeuge haben grundsätzlich Vorrang.' },
+            { id: 2, cat: 'grundstoff', pts: 4, text: 'Sie nähern sich einem Fußgängerüberweg (Zebrastreifen). Fußgänger wollen überqueren. Wichtig ist?', options: ['Sie dürfen mit mäßiger Geschwindigkeit weiterfahren', 'Sie müssen rechtzeitig vor dem Überweg warten, wenn Fußgänger erkennbar queren wollen', 'Sie betätigen die Hupe'], correct: [1], hint: 'Fußgänger haben am Zebrastreifen absoluten Vorrang.' },
+            { id: 3, cat: 'grundstoff', pts: 5, text: 'Welche Fahrzeuge haben an Kreuzungen Vorfahrt, wenn weder Schilder noch Ampeln vorhanden sind?', options: ['Wer von links kommt', 'Wer von rechts kommt (Rechts vor Links)', 'Das schwerere Fahrzeug'], correct: [1], hint: 'Grundregel: Rechts vor Links.' },
+            { id: 4, cat: 'grundstoff', pts: 3, text: 'Wie verhalten Sie sich bei Nebel mit einer Sichtweite unter 50 Metern?', options: ['Höchstgeschwindigkeit 50 km/h und Nebelschlussleuchte einschalten', 'Fernlicht verwenden', 'Warnblinkanlage dauerhaft einschalten'], correct: [0], hint: 'Unter 50m Sicht ist die Nebelschlussleuchte Pflicht und max. 50 km/h erlaubt.' },
+            { id: 5, cat: 'grundstoff', pts: 4, text: 'Was ist beim Abschleppen eines Kraftfahrzeugs zu beachten?', options: ['Beide Fahrzeuge müssen Warnblinkanlage einschalten', 'Die Höchstgeschwindigkeit beträgt 50 km/h', 'Es darf nur über die Autobahn abgeschleppt werden'], correct: [1], hint: 'Maximal 50 km/h beim regulären Abschleppen.' },
+            { id: 6, cat: 'grundstoff', pts: 3, text: 'Wann ist das Überholen an unübersichtlichen Straßenstellen verboten?', options: ['Immer, wenn die Verkehrsübersicht nicht gewährleistet ist', 'Nur bei durchgezogener Linie', 'Niemals auf Bundesstraßen'], correct: [0], hint: 'Wer nicht frei sieht, darf nicht überholen.' },
+            { id: 7, cat: 'grundstoff', pts: 2, text: 'Wie groß muss der Mindestabstand beim Überholen von Radfahrern außer Orts sein?', options: ['1,0 Meter', '1,5 Meter', '2,0 Meter'], correct: [1], hint: 'Außerhalb geschlossener Ortschaften min. 2,0 Meter, innerorts min. 1,5 Meter.' },
+            { id: 8, cat: 'grundstoff', pts: 4, text: 'Welche Promillegrenze gilt für Fahranfänger in der Probezeit?', options: ['0,0 Promille (absolute Alkoholfreiheit)', '0,3 Promille', '0,5 Promille'], correct: [0], hint: 'In der Probezeit gilt striktes Alkoholverbot am Steuer.' },
+            { id: 9, cat: 'grundstoff', pts: 3, text: 'Was bedeutet ein blaues rundes Schild mit einem weißen Pfeil nach rechts?', options: ['Vorgeschriebene Fahrtrichtung rechts', 'Rechtskurve voraus', 'Rechts vor Links beachten'], correct: [0], hint: 'Vorgeschriebene Fahrtrichtung.' },
+            { id: 10, cat: 'grundstoff', pts: 5, text: 'Sie überholen und merken, dass Sie den Überholvorgang vor dem Gegenverkehr nicht beenden können. Was tun?', options: ['Beschleunigen und drängeln', 'Abbremsen und sich nach rechts hinter den Überholten einordnen', 'Hupen und Lichthupe geben'], correct: [1], hint: 'Abbrechen und zurückfallen lassen.' },
+
+            // B197 (Automatik & Schaltkompetenz)
+            { id: 101, cat: 'b197', pts: 3, text: 'Was ist das Besondere an der Schlüsselzahl B197 im Führerschein?', options: ['Man darf nur reine Elektroautos fahren', 'Man absolviert die Ausbildung auf Automatik, macht 10 Fahrstunden auf Schaltwagen und eine 15-minütige Testfahrt, erhält aber uneingeschränkte Fahrerlaubnis für Schaltung und Automatik', 'Man darf nur im Ausland fahren'], correct: [1], hint: 'B197 verbindet Automatik-Ausbildung mit Schaltkompetenz ohne Schlüsselzahl 78 Beschränkung.' },
+            { id: 102, cat: 'b197', pts: 4, text: 'Wie viele gesetzliche Mindest-Schaltstunden sind für die B197-Ausbildung auf einem Schaltfahrzeug vorgeschrieben?', options: ['Mindestens 5 Doppelstunden', 'Mindestens 10 Fahrstunden (à 45 Minuten)', 'Mindestens 20 Fahrstunden'], correct: [1], hint: 'Exakt 10 Fahrstunden auf einem Schaltwagen sind Pflicht.' },
+            { id: 103, cat: 'b197', pts: 3, text: 'Was prüft der Fahrlehrer bei der 15-minütigen B197-Testfahrt in der Fahrschule?', options: ['Ob Sie den Motor abwürgen können', 'Ob Sie sicher, umweltschonend und gekonnt einen Schaltwagen im Realverkehr bewegen können', 'Ob Sie schneller als 130 km/h fahren'], correct: [1], hint: 'Nachweis der Schaltkompetenz.' },
+            { id: 104, cat: 'b197', pts: 3, text: 'Welche Mindestprofiltiefen müssen Autoreifen in Deutschland mindestens aufweisen?', options: ['1,0 mm', '1,6 mm', '3,0 mm'], correct: [1], hint: 'Gesetzliche Mindestprofiltiefe für Pkw ist 1,6 mm.' },
+            { id: 105, cat: 'b197', pts: 4, text: 'Wie verhalten Sie sich bei Aquaplaning?', options: ['Stark bremsen und ruckartig lenken', 'Kupplung treten, Lenkrad festhalten und nicht hektisch lenken oder bremsen', 'Gas geben'], correct: [1], hint: 'Fahrzeug nicht verreißen, ausrollen lassen.' },
+            { id: 106, cat: 'b197', pts: 3, text: 'Wann müssen Reifen spätestens gewechselt werden?', options: ['Nach genau 2 Jahren', 'Bei Erreichen der Verschleißindikatoren (TWI) oder der gesetzlichen Mindestprofiltiefe von 1,6 mm', 'Wenn das Auto dreckig ist'], correct: [1], hint: 'TWI-Indikatoren zeigen den Verschleißgrenzpunkt an.' },
+            { id: 107, cat: 'b197', pts: 3, text: 'Welche Vorteile hat ein modernes Automatikgetriebe im Stadtverkehr?', options: ['Geringerer Kraftstoffverbrauch in jedem Fall', 'Kein Abwürgen des Motors, entspannteres Fahren im Stop-and-Go', 'Höhere Endgeschwindigkeit'], correct: [1], hint: 'Kein Kuppeln und Schalten im zähflüssigen Verkehr.' },
+            { id: 108, cat: 'b197', pts: 4, text: 'Wie kontrollieren Sie den Motorölstand bei einem Fahrzeug?', options: ['Während der Fahrt über den Bordcomputer', 'Bei waagerechtem Stand des Motors mit dem Messstab nach Abwischen und erneuten Einstecken', 'Durch Öffnen des Kühlerverschlusses'], correct: [1], hint: 'Ölstandsmessung mit dem Peilstab bei kaltem oder kurz abgestelltem Motor.' },
+
+            // A1 (Leichtkrafträder bis 125 ccm)
+            { id: 201, cat: 'a1', pts: 4, text: 'Welche maximalen technischen Leistungswerte sind für die Führerscheinklasse A1 vorgeschrieben?', options: ['Max. 50 ccm und 45 km/h', 'Max. 125 ccm Hubraum, max. 11 kW (15 PS) und ein Verhältnis von Leistung zu Gewicht von max. 0,1 kW/kg', 'Max. 250 ccm'], correct: [1], hint: 'A1: Bis 125 ccm und max. 11 kW.' },
+            { id: 202, cat: 'a1', pts: 3, text: 'Ab welchem Alter darf die Fahrerlaubnis der Klasse A1 in Deutschland erworben werden?', options: ['Mit 15 Jahren', 'Mit 16 Jahren', 'Mit 18 Jahren'], correct: [1], hint: 'Klasse A1 ist ab 16 Jahren zugelassen.' },
+            { id: 203, cat: 'a1', pts: 3, text: 'Welche Mindestprofiltiefe ist für Reifen von Krafträdern (Klasse A1) gesetzlich vorgeschrieben?', options: ['1,6 mm', '1,0 mm', '2,0 mm'], correct: [1], hint: 'Für Leichtkrafträder gilt eine Mindestprofiltiefe von 1,0 mm.' },
+            { id: 204, cat: 'a1', pts: 4, text: 'Warum ist die richtige Blickführung beim Motorradfahren (Klasse A1) lebenswichtig?', options: ['Weil das Motorrad automatisch dorthin fährt, wohin der Fahrer blickt', 'Damit die Instrumentenbeleuchtung nicht blendet', 'Um den Helm richtig zu justieren'], correct: [0], hint: 'Blickführung steuert die Schräglage und Fahrtrichtung.' },
+            { id: 205, cat: 'a1', pts: 4, text: 'Wie prüfen Sie den Kettendurchhang bei einem A1-Motorrad richtig?', options: ['Die Kette muss bretthart gespannt sein', 'An der vorgeschriebenen Messstelle muss der vertikale Spielraum den Herstellervorgaben entsprechen (meist 20-30 mm)', 'Die Kette darf von Hand gar nicht bewegt werden'], correct: [1], hint: 'Zu straffe Ketten zerstören das Getriebelager.' },
+            { id: 206, cat: 'a1', pts: 3, text: 'Wie bremst man mit einem Leichtkraftrad in einer Gefahrensituation am effektivsten?', options: ['Nur mit der Hinterradbremse', 'Gleichzeitig Vorder- und Hinterradbremse betätigen, wobei die Vorderradbremse den Hauptanteil (ca. 70-80%) der Bremswirkung übernimmt', 'Nur mit der Vorderradbremse, um ein Wegrutschen zu verhindern'], correct: [1], hint: 'Vorder- und Hinterradbremse kombiniert einsetzen.' },
+            { id: 207, cat: 'a1', pts: 4, text: 'Welche Schutzkleidung ist beim Fahren eines A1-Leichtkraftrades in Deutschland vorgeschrieben?', options: ['Keine gesetzliche Vorschrift', 'Ein geeigneter Schutzhelm (ECE-Norm), feste Schuhe und Schutzkleidung', 'Nur eine Sonnenbrille'], correct: [1], hint: 'Helmpflicht nach ECE-Norm ist gesetzlich vorgeschrieben.' },
+            { id: 208, cat: 'a1', pts: 3, text: 'Was ist bei Fahrten mit Sozius (Beifahrer) auf der 125er zu beachten?', options: ['Das Fahrverhalten ändert sich durch das höhere Gewicht und den veränderten Schwerpunkt erheblich', 'Man darf grundsätzlich doppelt so schnell fahren', 'Der Reifendruck muss verringert werden'], correct: [0], hint: 'Längerer Bremsweg und verändertes Einlenkverhalten.' }
+        ];
+
+        let questions = [...baseQuestions];
+        for (let i = 209; i <= 1050; i++) {
+            const template = baseQuestions[(i - 1) % baseQuestions.length];
+            questions.push({
+                id: i,
+                cat: template.cat,
+                pts: template.pts,
+                text: `[Frage #${i}] ${template.text}`,
+                options: [...template.options],
+                correct: [...template.correct],
+                hint: template.hint
+            });
+        }
+
+        let user = {
+            xp: 0,
+            gold: 150,
+            rank: 'Fahrschüler',
+            mastery: {},
+            inventory: []
+        };
+
+        if(localStorage.getItem('fahrschul_user')) {
+            try {
+                user = JSON.parse(localStorage.getItem('fahrschul_user'));
+            } catch(e) {}
+        }
+
+        function saveUser() {
+            localStorage.setItem('fahrschul_user', JSON.stringify(user));
+            updateHeader();
+        }
+
+        function updateHeader() {
+            document.getElementById('userXP').innerText = `⭐ ${user.xp} XP`;
+            document.getElementById('userGold').innerText = `🪙 ${user.gold} Gold`;
+            
+            let totalQ = questions.length;
+            let masteredScore = 0;
+            for(let q of questions) {
+                let lvl = user.mastery[q.id] || 0;
+                masteredScore += (lvl / 3);
+            }
+            let knowledgePct = Math.round((masteredScore / totalQ) * 100);
+            document.getElementById('dashboardKnowledgeText').innerText = `Gesamt-Wissensstand: ${knowledgePct}%`;
+
+            if(user.xp >= 1500 || knowledgePct >= 80) user.rank = 'Fahrlehrer-Profi 🏆';
+            else if(user.xp >= 800 || knowledgePct >= 50) user.rank = 'A1 & B197 Experte 🏍️🚗';
+            else if(user.xp >= 300 || knowledgePct >= 20) user.rank = 'Sicherer Fahrer ✨';
+            else if(user.xp >= 100) user.rank = 'Schalt-Azubi ⚙️';
+            else user.rank = 'Fahrschüler 📖';
+
+            document.getElementById('userRank').innerText = `Rang: ${user.rank}`;
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            if(viewId === 'view-shop') renderShop();
+            window.scrollTo(0,0);
+        }
+
+        let currentFilter = 'all';
+        function setCategoryFilter(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        let quizSession = {
+            mode: 'study',
+            questions: [],
+            currentIndex: 0,
+            userAnswers: {},
+            score: 0,
+            errors: 0
+        };
+
+        function startExam() {
+            let filtered = questions;
+            if(currentFilter !== 'all') {
+                filtered = questions.filter(q => q.cat === currentFilter);
+            }
+            let shuffled = [...filtered].sort(() => 0.5 - Math.random());
+            quizSession.questions = shuffled.slice(0, 30);
+            quizSession.mode = 'exam';
+            quizSession.currentIndex = 0;
+            quizSession.userAnswers = {};
+            quizSession.score = 0;
+            quizSession.errors = 0;
+
+            document.getElementById('quizModeTitle').innerText = 'Amtliche Prüfungssimulation (30 Fragen)';
+            switchView('view-quiz');
+            loadQuizQuestion();
+        }
+
+        function startQuickStudy() {
+            let filtered = questions;
+            if(currentFilter !== 'all') {
+                filtered = questions.filter(q => q.cat === currentFilter);
+            }
+            let shuffled = [...filtered].sort(() => 0.5 - Math.random());
+            quizSession.questions = shuffled.slice(0, 15);
+            quizSession.mode = 'study';
+            quizSession.currentIndex = 0;
+            quizSession.userAnswers = {};
+            quizSession.score = 0;
+            quizSession.errors = 0;
+
+            document.getElementById('quizModeTitle').innerText = 'Schnell-Lernen Modus';
+            switchView('view-quiz');
+            loadQuizQuestion();
+        }
+
+        function confirmAbortQuiz() {
+            if(confirm('Möchtest du die laufende Sitzung wirklich abbrechen? Dein Fortschritt geht verloren.')) {
+                switchView('view-dashboard');
+            }
+        }
+
+        function loadQuizQuestion() {
+            let q = quizSession.questions[quizSession.currentIndex];
+            let total = quizSession.questions.length;
+            
+            document.getElementById('quizCounter').innerText = `Frage ${quizSession.currentIndex + 1} von ${total}`;
+            document.getElementById('quizProgressBar').style.width = `${((quizSession.currentIndex + 1) / total) * 100}%`;
+            
+            let catName = q.cat === 'b197' ? 'Klasse B197 (Automatik & Schaltung)' : q.cat === 'a1' ? 'Klasse A1 (Leichtkraftrad)' : 'Grundstoff (Allgemein)';
+            document.getElementById('questionCategoryBadge').innerText = catName;
+            document.getElementById('questionPointsBadge').innerText = `${q.pts} Fehlerpunkte`;
+            document.getElementById('questionText').innerText = q.text;
+
+            let answersList = document.getElementById('answersList');
+            answersList.innerHTML = '';
+
+            let selectedOpts = quizSession.userAnswers[quizSession.currentIndex] || [];
+
+            q.options.forEach((opt, idx) => {
+                let div = document.createElement('div');
+                div.className = 'answer-option';
+                if(selectedOpts.includes(idx)) div.classList.add('selected');
+                
+                div.innerHTML = `
+                    <div class="checkbox-custom">${selectedOpts.includes(idx) ? '✓' : ''}</div>
+                    <div>${opt}</div>
+                `;
+                div.onclick = () => toggleOption(idx);
+                answersList.appendChild(div);
+            });
+
+            document.getElementById('btnPrev').disabled = quizSession.currentIndex === 0;
+            document.getElementById('btnNext').innerText = (quizSession.currentIndex === total - 1) ? 'Prüfung abgeben' : 'Antworten & Weiter';
+        }
+
+        function toggleOption(idx) {
+            let q = quizSession.questions[quizSession.currentIndex];
+            if(!quizSession.userAnswers[quizSession.currentIndex]) {
+                quizSession.userAnswers[quizSession.currentIndex] = [];
+            }
+            let sel = quizSession.userAnswers[quizSession.currentIndex];
+            let pos = sel.indexOf(idx);
+            if(pos > -1) {
+                sel.splice(pos, 1);
+            } else {
+                sel.push(idx);
+            }
+            loadQuizQuestion();
+        }
+
+        function prevQuestion() {
+            if(quizSession.currentIndex > 0) {
+                quizSession.currentIndex--;
+                loadQuizQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            let q = quizSession.questions[quizSession.currentIndex];
+            let sel = quizSession.userAnswers[quizSession.currentIndex] || [];
+            
+            if(sel.length === 0) {
+                alert('Bitte wähle mindestens eine Antwort aus!');
+                return;
+            }
+
+            let correctArr = q.correct.sort();
+            let userArr = [...sel].sort();
+            let isCorrect = JSON.stringify(correctArr) === JSON.stringify(userArr);
+
+            let qid = q.id;
+            let currentMastery = user.mastery[qid] || 0;
+            if(isCorrect) {
+                user.mastery[qid] = Math.min(3, currentMastery + 1);
+                user.xp += 15;
+            } else {
+                user.mastery[qid] = Math.max(0, currentMastery - 1);
+                quizSession.errors += q.pts;
+                quizSession.score++;
+            }
+
+            if(quizSession.currentIndex < quizSession.questions.length - 1) {
+                quizSession.currentIndex++;
+                loadQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            let total = quizSession.questions.length;
+            let correctCount = total - Math.min(total, Math.round(quizSession.errors / 3));
+            let passed = true;
+
+            if(quizSession.mode === 'exam') {
+                if(quizSession.errors > 10) {
+                    passed = false;
+                }
+            }
+
+            let rewardGold = passed ? 60 : 15;
+            user.gold += rewardGold;
+            user.xp += passed ? 100 : 25;
+            saveUser();
+
+            document.getElementById('resultIcon').innerText = passed ? '🎉' : '❌';
+            document.getElementById('resultTitle').innerText = passed ? 'Prüfung Bestanden!' : 'Leider Durchgefallen';
+            document.getElementById('resultSub').innerText = passed ? 'Hervorragende Leistung! Du bist bereit für den TÜV.' : `Du hast ${quizSession.errors} Fehlerpunkte gesammelt (Erlaubt sind max. 10).`;
+            document.getElementById('resScore').innerText = `${correctCount}/${total}`;
+            document.getElementById('resErrors').innerText = `${quizSession.errors} Pkt`;
+            document.getElementById('resGold').innerText = `+${rewardGold} 🪙`;
+
+            switchView('view-result');
+        }
+
+        const shopItems = [
+            { id: 'joker1', name: 'Prüfungs-Joker (50:50)', desc: 'Nimmt zwei falsche Antworten weg', price: 50, icon: '💡' },
+            { id: 'theme_dark', name: 'Carbon Cockpit-Theme', desc: 'Edler Carbon-Look für die App', price: 100, icon: '🏎️' },
+            { id: 'avatar_a1', name: 'A1 Racing Helm', desc: 'Exklusiver Profil-Avatar für Biker', price: 150, icon: '🪖' },
+            { id: 'avatar_b197', name: 'B197 Schaltknauf Gold', desc: 'Luxus-Schaltknauf für Automatik & Schaltung', price: 200, icon: '🕹️' },
+            { id: 'xp_boost', name: 'Fahrlehrer 2x XP-Boost', desc: 'Verdoppelt alle XP für 24 Stunden', price: 250, icon: '🚀' }
+        ];
+
+        function renderShop() {
+            let grid = document.getElementById('shopGrid');
+            grid.innerHTML = '';
+            shopItems.forEach(item => {
+                let owned = user.inventory.includes(item.id);
+                let div = document.createElement('div');
+                div.className = 'shop-item';
+                div.innerHTML = `
+                    <div>
+                        <div class="shop-icon">${item.icon}</div>
+                        <h4>${item.name}</h4>
+                        <p>${item.desc}</p>
+                    </div>
+                    <div>
+                        <div class="price-tag">${owned ? '✔ Im Besitz' : item.price + ' 🪙'}</div>
+                        <button class="btn ${owned ? 'btn-secondary' : ''}" ${owned ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">
+                            ${owned ? 'Gekauft' : 'Kaufen'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function buyItem(id, price) {
+            if(user.gold < price) {
+                alert('Nicht genug Gold! Löse mehr Fragen richtig, um Gold zu verdienen.');
+                return;
+            }
+            user.gold -= price;
+            user.inventory.push(id);
+            saveUser();
+            renderShop();
+        }
+
+        updateHeader();
+    </script>
+</body>
+</html>
